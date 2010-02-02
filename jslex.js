@@ -28,14 +28,20 @@ function TokenDef(pattern, callbackfn) {
 	var trimmed = text.trimBegin();
 	var match = trimmed.match(pattern);
 	if (match && match.index == 0) {
+	    var newText = trimmed.substr(match[0].length);
+	    var token = callbackfn(match[0]);
 	    return { success: true,
-		    token: callbackfn(match[0]),
-		    text: trimmed.substr(match[0].length) };
+		    token: token,
+		    text: newText};
 	} else {
 	    return { success: false };
 	}
     };
 }
+
+TokenDef.ignore = function (string) {
+    return null;
+};
 
 function jsLex(tokenDefs, text) {
     text = text.trim();
@@ -46,7 +52,7 @@ outer: while (text.length > 0) {
 	    var tokenType = tokenDefs[i];
 	    var match = tokenType.match(text);
 	    if (match.success) {
-		tokenStream.push(match.token);
+		match.token && tokenStream.push(match.token);
 		text = match.text.trim();
 		continue outer;
 	    }
