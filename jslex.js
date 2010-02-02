@@ -43,6 +43,12 @@ TokenDef.ignore = function (string) {
     return null;
 };
 
+TokenDef.always = function (token) {
+    return function (string) {
+	return token;
+    };
+}
+
 function jsLex(tokenDefs, text) {
     text = text.trim();
     var tokenStream = [];
