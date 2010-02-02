@@ -47,8 +47,12 @@ TokenDef.always = function (token) {
     return function (string) {
 	return token;
     };
-}
+};
 
+TokenDef.identitiy = function (string) {
+    return string;
+}
+	
 function jsLex(tokenDefs, text) {
     text = text.trim();
     var tokenStream = [];
