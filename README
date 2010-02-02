@@ -1,0 +1,14 @@
+jslex is a lexing library for JavaScript/ECMAscript.
+
+It serves a similar purpose to utilities in other languages such as lex or flex. However, instead of requiring the user to learn another language for the purpose of formatting the grammar and to run an extra compilation pass, jslex is implemented purely as a JavaScript/ECMAscript library.
+
+To use jslex, load the "jslex.js" file, create a list of TokenDef objects for each token types, and call the jsLex function.
+
+The TokenDef constructor takes two arguments: a regular expression and a function taking the string matched by the regular expression and producing the appropriate token.
+
+For example, this could be used to recognize a natural number:
+
+    new TokenDef(/[0-9]+/, function (string) {
+    			   	    return ["int", parseInt(string)];
+				    })
+
