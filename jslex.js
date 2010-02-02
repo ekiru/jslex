@@ -23,15 +23,36 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-function jslex(tokenDefs, text) {
+function TokenDef(pattern, callbackfn) {
+    this.match = function match(text) {
+	var trimmed = text.trimBegin();
+	var match = trimmed.match(pattern);
+	if (match && match.index == 0) {
+	    return { success: true,
+		    token: callbackfn(match[0]),
+		    text: trimmed.substr(match[0].length) };
+	} else {
+	    return { success: false };
+	}
+    };
+}
+
+function jsLex(tokenDefs, text) {
+    text = text.trim();
     var tokenStream = [];
     var tokenCount = tokenDefs.length;
-    while (text.length > 0) {
+outer: while (text.length > 0) {
 	for (var i = 0; i < tokenCount; i++) {
 	    var tokenType = tokenDefs[i];
 	    var match = tokenType.match(text);
-	    tokenStream.push(match.token);
-	    break;
+	    if (match.success) {
+		tokenStream.push(match.token);
+		text = match.text.trim();
+		continue outer;
+	    }
 	}
+	throw Error("Can't tokenize string " + text);
     }
+
+    return tokenStream;
 }
