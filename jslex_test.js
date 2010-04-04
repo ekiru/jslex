@@ -23,7 +23,11 @@
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
   OTHER DEALINGS IN THE SOFTWARE.
 */;
-load("jslex.js");
+
+var lexer = require("./jslex");
+
+var TokenDef = lexer.TokenDef;
+var jsLex    = lexer.jsLex;
 
 function testTokenMatch() {
   var result = true;

@@ -25,7 +25,7 @@
 
 function TokenDef(pattern, callbackfn) {
   this.match = function match(text) {
-    var trimmed = text.trimBegin();
+    var trimmed = text.trim();
     var match = trimmed.match(pattern);
     if (match && match.index == 0) {
       var newText = trimmed.substr(match[0].length);
@@ -76,4 +76,9 @@ function jsLex(tokenDefs, text) {
   }
 
   return tokenStream;
+}
+
+if (typeof(exports) !== "undefined") {
+  exports.TokenDef = TokenDef;
+  exports.jsLex    = jsLex;
 }
