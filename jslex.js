@@ -24,51 +24,56 @@
 */
 
 function TokenDef(pattern, callbackfn) {
-    this.match = function match(text) {
-  var trimmed = text.trimBegin();
-  var match = trimmed.match(pattern);
-  if (match && match.index == 0) {
+  this.match = function match(text) {
+    var trimmed = text.trimBegin();
+    var match = trimmed.match(pattern);
+    if (match && match.index == 0) {
       var newText = trimmed.substr(match[0].length);
       var token = callbackfn(match[0]);
-      return { success: true,
-        token: token,
-        text: newText};
-  } else {
+
+      return {
+        success:  true,
+        token:    token,
+        text:     newText
+      };
+    } else {
       return { success: false };
-  }
-    };
+    }
+  };
 }
 
 TokenDef.ignore = function (string) {
-    return null;
+  return null;
 };
 
 TokenDef.always = function (token) {
-    return function (string) {
-  return token;
-    };
+  return function (string) {
+    return token;
+  };
 };
 
 TokenDef.identitiy = function (string) {
-    return string;
+  return string;
 };
-  
+
 function jsLex(tokenDefs, text) {
-    text = text.trim();
-    var tokenStream = [];
-    var tokenCount = tokenDefs.length;
-outer: while (text.length > 0) {
-  for (var i = 0; i < tokenCount; i++) {
+  text = text.trim();
+  var tokenStream = [];
+  var tokenCount = tokenDefs.length;
+
+  outer: while (text.length > 0) {
+    for (var i = 0; i < tokenCount; i++) {
       var tokenType = tokenDefs[i];
       var match = tokenType.match(text);
-      if (match.success) {
-    match.token && tokenStream.push(match.token);
-    text = match.text.trim();
-    continue outer;
-      }
-  }
-  throw Error("Can't tokenize string " + text);
-    }
 
-    return tokenStream;
+      if (match.success) {
+        match.token && tokenStream.push(match.token);
+        text = match.text.trim();
+        continue outer;
+      }
+    }
+    throw Error("Can't tokenize string " + text);
+  }
+
+  return tokenStream;
 }
