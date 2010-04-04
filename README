@@ -9,6 +9,6 @@ The TokenDef constructor takes two arguments: a regular expression and a functio
 For example, this could be used to recognize a natural number:
 
     new TokenDef(/[0-9]+/, function (string) {
-    			   	    return ["int", parseInt(string)];
-				    })
+                   return ["int", parseInt(string)];
+            })
 
