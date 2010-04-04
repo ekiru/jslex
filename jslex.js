@@ -51,7 +51,7 @@ TokenDef.always = function (token) {
 
 TokenDef.identitiy = function (string) {
     return string;
-}
+};
 	
 function jsLex(tokenDefs, text) {
     text = text.trim();

@@ -22,7 +22,7 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
   OTHER DEALINGS IN THE SOFTWARE.
-*/
+*/;
 load("jslex.js");
 
 function testTokenMatch() {
@@ -74,7 +74,7 @@ function testIntOrIdentifierLexer() {
     var result = true;
     var tokenRules = [
 	new TokenDef(/[0-9]+/, function (string) {
-		return ["int", parseInt(string)];
+		return ["int", parseInt(string, "10")];
 	    }),
 	new TokenDef(/[a-zA-Z][a-zA-Z0-9_$]*/, function (string) {
 		return ["ident", string];
