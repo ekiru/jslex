@@ -24,54 +24,64 @@
 */
 
 function TokenDef(pattern, callbackfn) {
-    this.match = function match(text) {
-	var trimmed = text.trimBegin();
-	var match = trimmed.match(pattern);
-	if (match && match.index == 0) {
-	    var newText = trimmed.substr(match[0].length);
-	    var token = callbackfn(match[0]);
-	    return { success: true,
-		    token: token,
-		    text: newText};
-	} else {
-	    return { success: false };
-	}
-    };
+  this.match = function match(text) {
+    var trimmed = text.trim();
+    var match = trimmed.match(pattern);
+    if (match && match.index == 0) {
+      var newText = trimmed.substr(match[0].length);
+      var token = callbackfn(match[0]);
+
+      return {
+        success:  true,
+        token:    token,
+        text:     newText
+      };
+    } else {
+      return { success: false };
+    }
+  };
 }
 
 TokenDef.ignore = function (string) {
-    return null;
+  return null;
 };
 
 TokenDef.always = function (token) {
-    return function (string) {
-	return token;
-    };
+  return function (string) {
+    return token;
+  };
 };
 
 TokenDef.identity = function (string) {
-    return string;
-}
+  return string;
+};
 
 function jsLex(tokenDefs, text) {
-    text = text.trim();
-    var tokenStream = [];
-    var tokenCount = tokenDefs.length;
-    while (text.length > 0) {
-	var matchedAny = false;
-	for (var i = 0; i < tokenCount; i++) {
-	    var tokenType = tokenDefs[i];
-	    var match = tokenType.match(text);
-	    if (match.success) {
-		match.token && tokenStream.push(match.token);
-		text = match.text.trim();
-		matchedAny = true;
-	    }
-	}
-	if (!matchedAny) {
-	    throw Error("Can't tokenize string " + text);
-	}
-    }
+  text = text.trim();
+  var tokenStream = [];
+  var tokenCount = tokenDefs.length;
 
-    return tokenStream;
+  while (text.length > 0) {
+    var matchedAny = false;
+    for (var i = 0; i < tokenCount; i++) {
+      var tokenType = tokenDefs[i];
+      var match = tokenType.match(text);
+
+      if (match.success) {
+        match.token && tokenStream.push(match.token);
+        text = match.text.trim();
+        matchedAny = true;
+      }
+    }
+    if (!matchedAny) {
+        throw Error("Can't tokenize string " + text);
+    }
+  }
+
+  return tokenStream;
+}
+
+if (typeof(exports) !== "undefined") {
+  exports.TokenDef = TokenDef;
+  exports.jsLex    = jsLex;
 }

@@ -22,99 +22,103 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
   OTHER DEALINGS IN THE SOFTWARE.
-*/
-load("jslex.js");
+*/;
+
+var lexer = require("./jslex");
+
+var TokenDef = lexer.TokenDef;
+var jsLex    = lexer.jsLex;
 
 function testTokenMatch() {
-    var result = true;
-    
-    var matchResult = new TokenDef(/[0-9]/, parseInt).match("123");
-    result = matchResult.success && result;
-    result = matchResult.token == 1 && result;
-    result = matchResult.text == "23" && result;
-    
-    matchResult = new TokenDef(/[0-9]/, parseInt).match("a123");
-    result = !matchResult.success && result;
+  var result = true;
 
-    matchResult = new TokenDef(/[0-9]+/, parseInt).match("12,");
-    result = matchResult.success && result;
-    result = matchResult.token == 12 && result;
-    result = matchResult.text == "," && result;
-    
-    return result;
+  var matchResult = new TokenDef(/[0-9]/, parseInt).match("123");
+  result = matchResult.success && result;
+  result = matchResult.token == 1 && result;
+  result = matchResult.text == "23" && result;
+
+  matchResult = new TokenDef(/[0-9]/, parseInt).match("a123");
+  result = !matchResult.success && result;
+
+  matchResult = new TokenDef(/[0-9]+/, parseInt).match("12,");
+  result = matchResult.success && result;
+  result = matchResult.token == 12 && result;
+  result = matchResult.text == "," && result;
+
+  return result;
 }
 
 function testTokenDef() {
-    var result = true;
+  var result = true;
 
-    result = testTokenMatch() && result;
+  result = testTokenMatch() && result;
 
-    if (result) {
-	print("Token definition tests succeeded.");
-    } else {
-	print("Token definition tests failed.");
-    }
-    return result;
+  if (result) {
+    print("Token definition tests succeeded.");
+  } else {
+    print("Token definition tests failed.");
+  }
+  return result;
 }
 
 function testIntLexer() {
-    var result = true;
+  var result = true;
 
-    var tokenRules = [new TokenDef(/[0-9]+/, parseInt)];
-    var tokens = jsLex(tokenRules, "123 456 789");
+  var tokenRules = [new TokenDef(/[0-9]+/, parseInt)];
+  var tokens = jsLex(tokenRules, "123 456 789");
 
-    result = tokens[0] == 123 && result;
-    result = tokens[1] == 456 && result;
-    result = tokens[2] == 789 && result;
-    
-    return result;
+  result = tokens[0] == 123 && result;
+  result = tokens[1] == 456 && result;
+  result = tokens[2] == 789 && result;
+
+  return result;
 }
 
 function testIntOrIdentifierLexer() {
-    var result = true;
-    var tokenRules = [
-	new TokenDef(/[0-9]+/, function (string) {
-		return ["int", parseInt(string)];
-	    }),
-	new TokenDef(/[a-zA-Z][a-zA-Z0-9_$]*/, function (string) {
-		return ["ident", string];
-	    })
-	];
-    var tokens = jsLex(tokenRules, "123 plus P4");
-    
-    result = tokens[0][0] == "int" && tokens[0][1] == 123 && result;
-    result = tokens[1][0] == "ident" && tokens[1][1] == "plus" && result;
-    result = tokens[2][0] == "ident" && tokens[2][1] == "P4" && result;
+  var result = true;
+  var tokenRules = [
+    new TokenDef(/[0-9]+/, function (string) {
+      return ["int", parseInt(string, "10")];
+    }),
+    new TokenDef(/[a-zA-Z][a-zA-Z0-9_$]*/, function (string) {
+      return ["ident", string];
+    })
+  ];
+  var tokens = jsLex(tokenRules, "123 plus P4");
 
-    return result;
+  result = tokens[0][0] == "int" && tokens[0][1] == 123 && result;
+  result = tokens[1][0] == "ident" && tokens[1][1] == "plus" && result;
+  result = tokens[2][0] == "ident" && tokens[2][1] == "P4" && result;
+
+  return result;
 }
 
 function testLexer() {
-    var result = true;
+  var result = true;
 
-    result = testIntLexer() && result;
-    result = testIntOrIdentifierLexer() && result;
+  result = testIntLexer() && result;
+  result = testIntOrIdentifierLexer() && result;
 
-    if (result) {
-	print("Lexer tests succeeded.");
-    } else {
-	print("Lexer tests failed.");
-    }
-    return result;
+  if (result) {
+    print("Lexer tests succeeded.");
+  } else {
+    print("Lexer tests failed.");
+  }
+  return result;
 }
 
 function testAll() {
-    var result = true;
+  var result = true;
 
-    result = testTokenDef() && result;
-    result = testLexer() && result;
+  result = testTokenDef() && result;
+  result = testLexer() && result;
 
-    if (result) {
-	print("All tests succeeded.");
-    } else {
-	print("Some tests failed.");
-    }
-    return result;
+  if (result) {
+    print("All tests succeeded.");
+  } else {
+    print("Some tests failed.");
+  }
+  return result;
 }
 
 testAll();
