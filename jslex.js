@@ -49,25 +49,28 @@ TokenDef.always = function (token) {
     };
 };
 
-TokenDef.identitiy = function (string) {
+TokenDef.identity = function (string) {
     return string;
 }
-	
+
 function jsLex(tokenDefs, text) {
     text = text.trim();
     var tokenStream = [];
     var tokenCount = tokenDefs.length;
-outer: while (text.length > 0) {
+    while (text.length > 0) {
+	var matchedAny = false;
 	for (var i = 0; i < tokenCount; i++) {
 	    var tokenType = tokenDefs[i];
 	    var match = tokenType.match(text);
 	    if (match.success) {
 		match.token && tokenStream.push(match.token);
 		text = match.text.trim();
-		continue outer;
+		matchedAny = true;
 	    }
 	}
-	throw Error("Can't tokenize string " + text);
+	if (!matchedAny) {
+	    throw Error("Can't tokenize string " + text);
+	}
     }
 
     return tokenStream;
